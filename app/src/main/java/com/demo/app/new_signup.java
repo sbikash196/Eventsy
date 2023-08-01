@@ -24,48 +24,48 @@ public class new_signup extends AppCompatActivity {
 
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-        emailEditText= findViewById(R.id.emailEditText);
-        confirmPasswordEditText= findViewById(R.id.confirmPasswordEditText);
-        phoneEditText= findViewById(R.id.phoneEditText);
+        emailEditText = findViewById(R.id.emailEditText);
+        confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
+        phoneEditText = findViewById(R.id.phoneEditText);
 
         Button registerButton = findViewById(R.id.registerButton);
-        registerButton.setOnClickListener(new View.OnClickListener(){
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                String username=usernameEditText.getText().toString();
-                String password=passwordEditText.getText().toString();
-                String cPassword =confirmPasswordEditText.getText().toString();
-                String email=emailEditText.getText().toString();
-                String phone=phoneEditText.getText().toString();
-                if(username.equals("")||password.equals("")||cPassword.equals("")||email.equals("")||phone.equals("")){
+            public void onClick(View v) {
+                String username = usernameEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+                String cPassword = confirmPasswordEditText.getText().toString();
+                String email = emailEditText.getText().toString();
+                String phone = phoneEditText.getText().toString();
+                if (username.equals("") || password.equals("") || cPassword.equals("") || email.equals("") || phone.equals("")) {
                     Toast.makeText(new_signup.this, "Please fill out all the textfields!!", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
+
                     if (password.equals(cPassword)) {
+                        database db = new database(new_signup.this);
+                        boolean i = db.insertUserData(username, password, email, phone);
+                        db.close(); // Close the database after use
 
-                        boolean i = g.insert_data(username, password, email, phone);
-
-                        if (i == true) {
+                        if (i) {
+                            // User registration successful
                             String emailPattern = "[a-zA-Z0-9._-]+@+[a-zA-Z0-9._-]+.com";
                             if (!email.matches(emailPattern)) {
                                 Toast.makeText(new_signup.this, "Invalid email format", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(new_signup.this, "User Registered successfully", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(new_signup.this, MainActivity.class);
+                                startActivity(intent);
                                 finish();
                             }
-
                         } else {
-                            Toast.makeText(new_signup.this, "password do not match", Toast.LENGTH_SHORT).show();
+                            // User registration failed
+                            Toast.makeText(new_signup.this, "User registration failed", Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Toast.makeText(new_signup.this, "Password do not match", Toast.LENGTH_SHORT).show();
                     }
-
-                    }
-
-                    }
-
-
-            });
-        }
+                }
+            }
+        });
+    }
     }

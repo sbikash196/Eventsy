@@ -1,0 +1,44 @@
+<!-- activity_venue_registration.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/venue_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Venue Name" />
+
+    <EditText
+        android:id="@+id/venue_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Venue Location" />
+
+    <EditText
+        android:id="@+id/venue_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="Venue Price" />
+
+    <ImageView
+        android:id="@+id/image_url"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_margin="10dp"
+        android:adjustViewBounds="true"
+        android:onClick="selectImageFromGalleryOrCamera"
+        android:scaleType="centerInside"
+        android:src="@drawable/place_holder_image" />
+
+    <Button
+        android:id="@+id/venueRegisterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Register Venue"
+        android:onClick="registerVenue" />
+
+</LinearLayout>

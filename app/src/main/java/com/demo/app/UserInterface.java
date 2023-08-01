@@ -2,74 +2,93 @@ package com.demo.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
+import java.util.ArrayList;
 import android.view.View;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
+import android.widget.ImageView;
+import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.navigation.NavigationView;
 
 public class UserInterface extends AppCompatActivity {
-    private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
-    private MaterialToolbar sidemenu;
 
+    private List<venue> venueList;
+    private RecyclerView recyclerView;
+    private VenueAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_interface);
 
-        drawerLayout = findViewById(R.id.drawerlayout);
-        navigationView = findViewById(R.id.navigationview);
+        recyclerView = findViewById(R.id.recyclerViewVenue);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_open, R.string.navigation_close);
+        // Initialize the venue list and adapter
+        venueList = new ArrayList<>();
+        adapter = new VenueAdapter(venueList);
 
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        sidemenu = findViewById(R.id.toolbar);
-        sidemenu.setOnClickListener(new View.OnClickListener() {
+        // Set the adapter to the RecyclerView
+        recyclerView.setAdapter(adapter);
+        ImageView addIconImageView = findViewById(R.id.addIconImageView1);
+        addIconImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawerLayout.openDrawer(GravityCompat.START);
+                Intent intent = new Intent(UserInterface.this, VenueRegistration.class);
+                startActivity(intent);
             }
         });
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.home) {
-                    openHomeActivity();
-                } else if (itemId == R.id.login_menu) {
-                    openMainActivity();
-                } else if (itemId == R.id.signup) {
-                    openRegistrationActivity();
-                }
+        // Call the method to show venues in the layout
+        showVenuesInRecyclerView();
+    }
+        @Override
+        protected void onResume() {
+            super.onResume();
+            // Refresh the venue list when the activity resumes
+            showVenuesInRecyclerView();
+        }
 
-                drawerLayout.closeDrawer(GravityCompat.START);
-                return true;
-            }
-        });
+
+    public List<venue> fetchAllVenues() {
+        List<venue> venues = new ArrayList<>();
+        database g = new database(UserInterface.this);
+        SQLiteDatabase db = g.getReadableDatabase();
+        Cursor cursor = db.query("venues", new String[]{"venue_name", "venue_location", "venue_price","image_url"},
+                null, null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                // Extract values from the cursor
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("venue_name"));
+                String location = cursor.getString(cursor.getColumnIndexOrThrow("venue_location"));
+                double price = cursor.getDouble(cursor.getColumnIndexOrThrow("venue_price"));
+                String imageUrl = cursor.getString(cursor.getColumnIndexOrThrow("image_url"));
+
+
+                // Create a new venue object with default values for id and imageUrl
+                venue venue = new venue(0, name, location, price,imageUrl);
+                venues.add(venue);
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
+
+        db.close();
+        return venues;
     }
 
-    private void openHomeActivity() {
-        Intent intent = new Intent(UserInterface.this, Home.class);
-        startActivity(intent);
-    }
-
-    private void openMainActivity() {
-        Intent intent = new Intent(UserInterface.this, MainActivity.class);
-        startActivity(intent);
-    }
-
-    private void openRegistrationActivity() {
-        Intent intent = new Intent(UserInterface.this, new_signup.class);
-        startActivity(intent);
+    public void showVenuesInRecyclerView() {
+        // Clear the existing venue list and fetch the latest data from the database
+        List<venue> newVenues = fetchAllVenues();
+        venueList.addAll(newVenues);
+        adapter.updateData(newVenues);
     }
 }
+
+
+
+
+

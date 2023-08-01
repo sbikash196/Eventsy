@@ -14,18 +14,22 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Button getstarted = findViewById(R.id.getstarted);
-        getstarted.setOnClickListener(new View.OnClickListener(){
+        Button loguser = findViewById(R.id.loguser);
+        loguser.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent intent=new Intent(Home.this, MainActivity.class);
-                Intent[] intents = {intent};
-                startActivities(intents);
+                Intent intent = new Intent(Home.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 
-
-
-
+        Button logvendor = findViewById(R.id.logvendor);
+        logvendor.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(Home.this, VendorLoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

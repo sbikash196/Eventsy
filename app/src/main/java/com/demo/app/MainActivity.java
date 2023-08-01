@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                     dbPassword = cursor.getString(cursor.getColumnIndex("password"));
 
                     if (password.equals(dbPassword)) {
-                        Intent intent = new Intent(MainActivity.this, Home.class);
+                        Intent intent = new Intent(MainActivity.this, VendorUI.class);
                         startActivity(intent);
                         finish();
                     } else {
