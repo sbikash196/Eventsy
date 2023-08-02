@@ -52,6 +52,12 @@ public class database extends SQLiteOpenHelper {
         }
     }
 
+    // Implement the onDelete function to delete a venue by its ID
+    public void onDelete(long id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("venues", "id=?", new String[]{String.valueOf(id)});
+        db.close();
+    }
 
     public boolean insertUserData(String username, String password, String email, String phone) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -68,7 +74,7 @@ public class database extends SQLiteOpenHelper {
     public boolean insertVendorData(String vname, String organization, String password, String email, String phone) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues c = new ContentValues();
-        c.put("vendorName", vname);
+        c.put("vendorname", vname);
         c.put("organization", organization);
         c.put("password", password);
         c.put("email", email);
@@ -92,6 +98,7 @@ public class database extends SQLiteOpenHelper {
         db.close();
         return r != -1;
     }
+
     public List<venue> getAllVenues() {
         List<venue> venueList = new ArrayList<>();
 
@@ -116,8 +123,4 @@ public class database extends SQLiteOpenHelper {
         db.close();
         return venueList;
     }
-
 }
-
-
-

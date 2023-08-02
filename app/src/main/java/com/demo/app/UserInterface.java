@@ -11,11 +11,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.util.Log;
 
 
 public class UserInterface extends AppCompatActivity {
 
     private List<venue> venueList;
+
+    private List<String> imageUrls;
     private RecyclerView recyclerView;
     private VenueAdapter adapter;
     @Override
@@ -26,12 +29,11 @@ public class UserInterface extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewVenue);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Initialize the venue list and adapter
         venueList = new ArrayList<>();
-        adapter = new VenueAdapter(venueList);
-
-        // Set the adapter to the RecyclerView
+        imageUrls = new ArrayList<>();
+        adapter = new VenueAdapter(this, venueList, imageUrls);
         recyclerView.setAdapter(adapter);
+
         ImageView addIconImageView = findViewById(R.id.addIconImageView1);
         addIconImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,22 +43,27 @@ public class UserInterface extends AppCompatActivity {
             }
         });
 
-        // Call the method to show venues in the layout
         showVenuesInRecyclerView();
     }
         @Override
         protected void onResume() {
             super.onResume();
-            // Refresh the venue list when the activity resumes
             showVenuesInRecyclerView();
         }
+    public void deleteVenue(int venueId) {
+        database db = new database(UserInterface.this);
+        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+        sqLiteDatabase.delete("venues", "id=?", new String[]{String.valueOf(venueId)});
+        sqLiteDatabase.close();
+    }
 
 
     public List<venue> fetchAllVenues() {
         List<venue> venues = new ArrayList<>();
+
         database g = new database(UserInterface.this);
         SQLiteDatabase db = g.getReadableDatabase();
-        Cursor cursor = db.query("venues", new String[]{"venue_name", "venue_location", "venue_price","image_url"},
+        Cursor cursor = db.query("venues", new String[]{"venue_name", "venue_location", "venue_price", "image_url"},
                 null, null, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
@@ -67,9 +74,8 @@ public class UserInterface extends AppCompatActivity {
                 double price = cursor.getDouble(cursor.getColumnIndexOrThrow("venue_price"));
                 String imageUrl = cursor.getString(cursor.getColumnIndexOrThrow("image_url"));
 
-
-                // Create a new venue object with default values for id and imageUrl
-                venue venue = new venue(0, name, location, price,imageUrl);
+                // Create a new venue object with the extracted values
+                venue venue = new venue(0, name, location, price, imageUrl);
                 venues.add(venue);
             } while (cursor.moveToNext());
 
@@ -80,13 +86,22 @@ public class UserInterface extends AppCompatActivity {
         return venues;
     }
 
+
     public void showVenuesInRecyclerView() {
-        // Clear the existing venue list and fetch the latest data from the database
+        venueList.clear();
+        imageUrls.clear();
+
+        // Fetch the latest data from the database and populate the lists
         List<venue> newVenues = fetchAllVenues();
         venueList.addAll(newVenues);
+        for (venue v : newVenues) {
+            imageUrls.add(v.getImageUrl());
+        }
+
         adapter.updateData(newVenues);
     }
-}
+    }
+
 
 
 

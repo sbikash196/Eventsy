@@ -102,27 +102,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-        <TextView
-            android:id="@+id/TextView2"
+        <ImageView
+            android:id="@+id/delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:background="@color/white"
-            android:drawableLeft="@drawable/delete"
-            android:drawablePadding="10dp"
+            android:src="@drawable/delete"
+            android:padding="10dp"
             android:elevation="4dp"
-            android:fontFamily="sans-serif-medium"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="10dp"
-            android:text="Delete"
-            android:textColor="#CE000000"
-            android:textSize="18dp"
-            android:textStyle="normal"
+            android:contentDescription="Delete Icon"
             app:layout_constraintBottom_toBottomOf="@+id/TextView"
             app:layout_constraintStart_toEndOf="@+id/TextView"
             app:layout_constraintTop_toTopOf="@+id/TextView"
-            />
+        />
 
         <TextView
             android:id="@+id/venue_price"
@@ -135,9 +129,9 @@
             android:textColor="#E91E1E"
             android:textSize="23dp"
             android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="@+id/TextView2"
+            app:layout_constraintBottom_toBottomOf="@+id/delete"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/TextView2" />
+            app:layout_constraintTop_toTopOf="@+id/delete" />
 
 
 

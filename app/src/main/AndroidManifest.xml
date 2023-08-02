@@ -29,9 +29,9 @@
         <activity
             android:name=".VendorLoginActivity"
             android:exported="false" />
-         <activity
-         android:name=".UserInterface"
-         android:exported="false" />
+<!--         <activity-->
+<!--         android:name=".UserInterface"-->
+<!--         android:exported="false" />-->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
@@ -39,7 +39,7 @@
             android:name=".VendorUI"
             android:exported="false" />
         <activity
-            android:name=".Home"
+            android:name=".UserInterface"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
